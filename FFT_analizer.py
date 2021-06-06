@@ -18,7 +18,7 @@ import struct
 
 # 表示関係のライブラリ
 #import pyautogui as pag # キーボード操作をしてくれるライブラリ
-import datetime as dt # 日付を出力してくれるライブラリ
+import datetime as dt
 from scipy import signal # ピーク検出
 
 class PlotWindow:
@@ -56,10 +56,24 @@ class PlotWindow:
         self.CHUNK= 2048             #1度に読み取る音声のデータ幅
         self.RATE=48000 # 44100             #サンプリング周波数
         self.audio=pyaudio.PyAudio()
+        self.hostAPICount = self.audio.get_host_api_count()
+        self.default = self.audio.get_default_input_device_info()
+        self.count = self.audio.get_device_count()
+        self.SPEAKERS = self.audio.get_default_output_device_info()["hostApi"]
+        print(self.default)
+        print(self.count)
+        print(self.hostAPICount)
+        for i in range(self.count):
+            print(self.audio.get_device_info_by_index(i))
+
+        for cnt in range(self.hostAPICount):
+            print(self.audio.get_host_api_info_by_index(cnt))
+
         self.stream=self.audio.open(format=pyaudio.paInt16,
                                     channels=1,
                                     rate=self.RATE,
                                     input=True,
+                                    input_host_api_specific_stream_info=self.SPEAKERS,
                                     frames_per_buffer=self.CHUNK)
 
         #アップデート時間設定
@@ -98,12 +112,15 @@ class PlotWindow:
             self.plt.autoRange()
 
     def AudioInput(self):
-        ret=self.stream.read(self.CHUNK, exception_on_overflow = False)  #音声の読み取り(バイナリ)
-        #バイナリ → 数値(int16)に変換
-        #32768.0=2^15で割ってるのは正規化(絶対値を1以下にすること)
-        ret=np.frombuffer(ret, dtype="int16")/2**12
-        return ret
-
+        try:
+            ret=self.stream.read(self.CHUNK, exception_on_overflow = False)  #音声の読み取り(バイナリ)
+            #バイナリ → 数値(int16)に変換
+            #32768.0=2^15で割ってるのは正規化(絶対値を1以下にすること)
+            ret=np.frombuffer(ret, dtype="int16")/2**12
+            return ret
+        except Exception as e:
+            print('You need to switch input devices.')
+            print(e)
     def FFT_AMP(self,data):
         data=np.hamming(len(data))*data
         data=np.fft.fft(data)
