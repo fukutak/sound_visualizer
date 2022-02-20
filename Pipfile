@@ -7,6 +7,9 @@ name = "pypi"
 pyqtgraph = "*"
 scipy = "*"
 pyqt5 = "*"
+numpy = "*"
+pyaudio = "*"
+
 
 [dev-packages]
 
