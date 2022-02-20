@@ -1,28 +1,12 @@
 # coding:utf-8
-# 音から動的に画像を生成
-"""
-from imageAudio_no_MyDesk2.py
-四角の大きさ：スペクトルの強さ、色：最大スペクトルの周波数で画像生成
-円の中に円を入れて、内側の円はスペクトルの個数の正多角形を描写
-なめらかに多角形が動くように2048点の周方向データに変更して描写
-
-onMyDesk3の変更点
-1. 高速化のためにコードを簡略化する。
-"""
-# プロット関係のライブラリ
 
 from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph as pg
 import numpy as np
 import sys
 import colorsys
-
-# 音声関係のライブラリ
 import pyaudio
-
-# 表示関係のライブラリ
-from scipy import signal, interpolate # ピーク検出と、内挿
-import datetime
+from scipy import signal
 import csv
 
 
@@ -60,23 +44,25 @@ class PlotWindow:
         self.fft_peaks0 = np.zeros(2048)
         self.fft_peaks1 = np.zeros(2048)
         self.zero = np.zeros(1000)
-        self.key = ['　ド　','　ド＃','　レ　','　レ＃','　ミ　','ファ　','ファ＃','　ソ　','　ソ＃','　ラ　','　ラ＃','　シ　']
+        self.key = ['　ド　', '　ド＃', '　レ　', '　レ＃', '　ミ　', 'ファ　',
+                    'ファ＃', '　ソ　', '　ソ＃', '　ラ　', '　ラ＃', '　シ　']
         # 新しい色の定義 [153, 114, 35], # re_b [0, 129, 65], # mi_b [27, 125, 160], # so_b [99, 55, 140], # ra_b [163, 116, 162], # si_b
         self.rgb_bar = np.array([
-                      [187, 85, 133], # ra
-                      [145, 106, 153], # ra_#
-                      [219, 163, 176], # si
-                      [224, 31, 32], # do
-                      [232, 184, 97], # do_#
-                      [216, 178, 19], # re
-                      [141, 177, 69], # re_＃
-                      [62, 169, 53], # mi
-                      [187, 131, 56], # fa
-                      [210, 93, 40], # fa_#
-                      [0, 176, 204], # so
-                      [38, 133, 179], # so_#
+                      [187, 85, 133],  # ra
+                      [145, 106, 153],  # ra_#
+                      [219, 163, 176],  # si
+                      [224, 31, 32],  # do
+                      [232, 184, 97],  # do_#
+                      [216, 178, 19],  # re
+                      [141, 177, 69],  # re_＃
+                      [62, 169, 53],  # mi
+                      [187, 131, 56],  # fa
+                      [210, 93, 40],  # fa_#
+                      [0, 176, 204],  # so
+                      [38, 133, 179],  # so_#
                       ])/255
-        self.up = np.exp(1/12*np.log(2)) # 半音上がるときの係数
+        self.up = np.exp(1/12*np.log(2))  # 半音上がるときの係数
+        self.up = np.exp(1/12*np.log(2))  # 半音上がるときの係数
         self.key_new = ['　ラ　','　ラ＃','　シ　','　ド　','　ド＃','　レ　','　レ＃','　ミ　','ファ　','ファ＃','　ソ　','　ソ＃'] # ラスターとのほうが都合が良い
         self.hsv_bar = np.zeros((17,3))
 
