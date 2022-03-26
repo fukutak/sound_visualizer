@@ -3,13 +3,13 @@
 Using pipenv. If you don't install pipenv, please install it or librarys written in `pipfile`.
 
 
-## FFT Analyzer
+## Realtime FFT Analyzer
 If you want to use realtime FFT analyzer, below command.
 ```
 python realtime_FFT_visualizer.py
 ```
 
-## Visualizer
+## Realtime Visualizer
 ```
 python sound_visualizer.py
 ```
