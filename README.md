@@ -8,6 +8,7 @@ $ pip install pyenv --target ~/.pyenv
 
 # install pipenv
 $ pip install pipenv
+$ pipenv install
 $ pipenv shell
 ```
 
