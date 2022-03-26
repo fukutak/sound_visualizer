@@ -10,8 +10,7 @@ pyqt5 = "*"
 numpy = "*"
 pyaudio = "*"
 
-
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.6"
